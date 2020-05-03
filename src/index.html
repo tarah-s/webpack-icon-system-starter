@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Webpack Icon System Starter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+    <style>
+      .content {
+        padding: 2rem 1.5rem;
+        text-align: center;
+        background-color: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      h2 {
+        padding-bottom: 1rem;
+      }
+      .link {
+        font-weight: 600;
+        color: #ffffff;
+      }
+      code {
+        margin-bottom: 1rem;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+  <div class="is-hidden sprites">  
+    <% if (htmlWebpackPlugin.files.sprites) { %>
+      <% for (var spriteFileName in htmlWebpackPlugin.files.sprites) { %>
+        <%= htmlWebpackPlugin.files.sprites[spriteFileName] %>
+      <% } %>
+    <% } %>
+  </div>
+  <section class="hero is-medium is-primary is-bold">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">
+         Webpack Icon System Starter
+        </h1>
+        <h2 class="subtitle">
+          Ready-made starting point for creating multiple svg sprite sets for creating your own npm package.
+        </h2>
+        <p class="text-muted">
+          Currently 0.1.0
+          <span>•</span>
+          <a href="#icons" class="link">Icons sprite set example</a>
+          <span>•</span>
+          <a href="#install" class="link">Install</a>
+          <span>•</span>
+          <a href="#usage" class="link">Usage</a>
+          <span>•</span>
+          <a href="https://github.com/tarah-s/webpack-icon-system-starter" class="link">Download from Github</a>
+        </p>
+      </div>
+    </div>
+  </section> 
+  <section class="section" id="app">
+    <div class="container"> 
+      <div class="columns is-4"> 
+        <div class="column is-full ">
+          <div class="field">
+            <div class="control">
+              <input class="input is-medium" v-model="search" type="text" placeholder="Search...">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="columns ">
+        <div class="column is-4">
+          <h1 class="title">All {{filteredList.length}} {{selected}} icons</h1>
+        </div>
+        <div class="column">
+          <div class="field">
+            <p class="control is-pulled-right">
+              <span class="select is-medium">
+                <select v-model="selected">
+                  <option value="" selected>all</option>
+                  <option value="sa">Set A</option>
+                  <option value="sb">Set B</option>
+                  <option value="sc">Set C</option>
+                </select>
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div> 
+    <div class="container">
+      <div class="columns is-multiline"> 
+        <div class='column is-2' v-for="icon in filteredList">
+          <div class='content'>
+            <svg class='icon is-large'>
+                <use :xlink:href="'#'+ icon"></use>
+            </svg>
+          </div>
+          <p class="has-text-centered">{{icon}}</p>
+        </div> 
+      </div>
+    </div>  
+  </section>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+          search: '',
+          icons: [],
+          selected: ''
+      }, 
+      mounted: function() {
+        this.getIcons();
+      },
+      methods: {
+        getIcons: function () {
+          const svgs = document.querySelectorAll('.sprites svg'); 
+          svgs.forEach(svg => {
+            const collection = svg.children[0].children;
+            for (var i = 0; i< collection.length; i++) { 
+              this.icons.push(collection[i].id)
+            } 
+          }); 
+        },
+      },
+      computed: {
+        filteredList() {
+          return this.icons.filter(item => { 
+            if(this.selected)  { 
+              return item.toLowerCase().includes(this.search.toLowerCase()) && item.startsWith(this.selected)
+            } else {
+              return item.toLowerCase().includes(this.search.toLowerCase())
+            }
+          })
+        }
+      }
+    }) 
+    </script>
+</html>
+
+
+ 
